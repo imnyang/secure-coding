@@ -9,8 +9,9 @@ You should add some functions and complete the security requirements.
 if you don't have a miniconda(or anaconda), you can install it on this url. - https://docs.anaconda.com/free/miniconda/index.html
 
 ```
-git clone https://github.com/ugonfor/secure-coding
+git clone https://github.com/ugonfor/secure-coding && cd secure-coding 
 conda env create -f enviroments.yaml
+conda activate secure_coding
 ```
 
 ## usage
@@ -18,7 +19,7 @@ conda env create -f enviroments.yaml
 run the server process.
 
 ```
-python app.py
+python3 app.py
 ```
 
 if you want to test on external machine, you can utilize the ngrok to forwarding the url.

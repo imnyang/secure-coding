@@ -8,3 +8,10 @@ dependencies:
     - flask 
     - flask-socketio
     - flask-sqlalchemy
+    - gunicorn
+    - werkzeug
+    - cryptography
+    - bleach
+    - flask_wtf
+    - flask_limiter
+    - wtforms

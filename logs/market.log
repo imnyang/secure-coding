@@ -1,0 +1,6 @@
+2025-03-25 21:57:48,332 INFO: Market startup [in /home/neko/secure-coding/app.py:101]
+2025-03-25 21:57:48,508 INFO: Market startup [in /home/neko/secure-coding/app.py:101]
+2025-03-25 21:57:55,474 WARNING: Not Found: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again., route: http://localhost:5000/search [in /home/neko/secure-coding/app.py:239]
+2025-03-25 21:57:57,105 WARNING: Not Found: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again., route: http://localhost:5000/search [in /home/neko/secure-coding/app.py:239]
+2025-03-25 21:58:13,803 INFO: Market startup [in /home/neko/secure-coding/app.py:101]
+2025-03-25 21:58:25,730 INFO: Market startup [in /home/neko/secure-coding/app.py:101]

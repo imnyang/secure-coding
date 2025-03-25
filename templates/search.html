@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}상품 검색{% endblock %}
+{% block content %}
+<h2>검색 결과</h2>
+<form method="get">
+  <input type="text" name="q" value="{{ query }}" placeholder="검색어 입력">
+  <button type="submit">검색</button>
+</form>
+<ul>
+  {% for product in results %}
+    <li>
+      <a href="{{ url_for('view_product', product_id=product['id']) }}">{{ product['title'] }}</a>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
