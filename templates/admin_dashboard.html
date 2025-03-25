@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}관리자 대시보드{% endblock %}
+{% block content %}
+<h2>관리자 대시보드</h2>
+
+<h3>사용자 관리</h3>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>사용자명</th>
+  </tr>
+  {% for user in users %}
+  <tr>
+    <td>{{ user.id }}</td>
+    <td>{{ user.username }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h3>상품 관리</h3>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>제목</th>
+    <th>가격</th>
+    <th>작업</th>
+  </tr>
+  {% for product in products %}
+  <tr>
+    <td>{{ product.id }}</td>
+    <td>{{ product.title }}</td>
+    <td>{{ product.price }}</td>
+    <td>
+      <form method="post" action="{{ url_for('delete_product', product_id=product.id) }}">
+        <button type="submit">삭제</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h3>신고 관리</h3>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>신고자</th>
+    <th>대상</th>
+    <th>사유</th>
+    <th>작업</th>
+  </tr>
+  {% for report in reports %}
+  <tr>
+    <td>{{ report.id }}</td>
+    <td>{{ report.reporter_id }}</td>
+    <td>{{ report.target_id }}</td>
+    <td>{{ report.reason }}</td>
+    <td>
+      <form method="post" action="{{ url_for('delete_report', report_id=report.id) }}">
+        <button type="submit">삭제</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

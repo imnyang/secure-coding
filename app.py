@@ -1,6 +1,6 @@
 import sqlite3
 import uuid
-import os, json, random, string
+import json, random, string
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g
 from flask_socketio import SocketIO, send
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -50,7 +50,6 @@ def init_db():
                 username TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
                 bio TEXT
-                is_admin INTEGER DEFAULT 0
             )
         """)
         # 상품 테이블 생성
@@ -84,7 +83,7 @@ def get_db():
     return db
 
 @app.teardown_appcontext
-def close_connection(exception):
+def close_connection(_):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
@@ -227,6 +226,11 @@ def new_product():
         description = sanitize_html(request.form['description'])
         price = escape(request.form['price'])
         account_number = escape(request.form['account_number'])
+
+        if not price.isdigit() or int(price) <= 0:
+            flash('가격은 0보다 큰 자연수로 입력해야 합니다.')
+            return redirect(url_for('new_product'))
+
         db = get_db()
         cursor = db.cursor()
         product_id = str(uuid.uuid4())
@@ -261,10 +265,9 @@ def view_product(product_id):
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_dashboard():
-    if 'user_id' not in session or not session.get('is_admin'):
-        flash('관리자 권한이 필요합니다.')
-        return redirect(url_for('login'))
-    
+    if request.remote_addr != '127.0.0.1':
+        return "Access denied", 403
+
     db = get_db()
     cursor = db.cursor()
 
@@ -282,6 +285,30 @@ def admin_dashboard():
 
     return render_template('admin_dashboard.html', users=users, products=products, reports=reports)
 
+@app.route('/admin/delete_product/<product_id>', methods=['POST'])
+def delete_product(product_id):
+    if request.remote_addr != '127.0.0.1':
+        return "Access denied", 403
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM product WHERE id = ?", (product_id,))
+    db.commit()
+    flash('상품이 삭제되었습니다.')
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/delete_report/<report_id>', methods=['POST'])
+def delete_report(report_id):
+    if request.remote_addr != '127.0.0.1':
+        return "Access denied", 403
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM report WHERE id = ?", (report_id,))
+    db.commit()
+    flash('신고가 삭제되었습니다.')
+    return redirect(url_for('admin_dashboard'))
+
 @socketio.on('send_message')
 def handle_send_message_event(data):
     data['message'] = escape(data['message'])
@@ -289,5 +316,6 @@ def handle_send_message_event(data):
     send(data, broadcast=True)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
-    init_db()
+    with app.app_context():
+        init_db()
+    socketio.run(app, debug=False)
